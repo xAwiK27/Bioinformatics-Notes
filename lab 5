@@ -1,0 +1,152 @@
+---
+title: "Lab 5"
+author: "Jeffrey Miller"
+date: "2026 Feb 20"
+output: pdf_document
+---
+
+
+### Today
+1. Review
+2. Permissions
+3. Conda environments
+4. Running Fastqc
+5. Redirection (if there is time)
+
+:::::::::::::::::::::::::::::::::::::::: keypoints
+
+- You can view file permissions using `ls -l` and change permissions using `chmod`.
+- The `history` command and the up arrow on your keyboard can be used to repeat recently used commands.
+- Conda environments simplify reporducability, dependencies and sharing environments.
+
+::::::::::::::::::::::::::::::::::::::::::::::::::
+
+
+:::::::::::::::::::::::::::::::::::::::: review
+
+- You can view file contents using `less`, `cat`, `head` or `tail`.
+- The commands `cp`, `mv`, and `mkdir` are useful for manipulating existing files and creating new directories.
+
+### Quality scores. Highest score for a base is 41
+Quality encoding: !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJ"
+                   |         |         |         |         |
+Quality score:    01........11........21........31........41
+
+::::::::::::::::::::::::::::::::::::::::::::::::::
+
+*Warm ups: What is the last read in the one of the .fastq files? How confident are you in this read?
+A: SRR097977.249, low confidence
+    (C:CCC::CCCCCCCC<8?6A:C28C<608'&&&,'$ --> Considered the Quality line, special char = low qual, letter = high qual)
+
+
+How big are your fastqs? (Hint: Look at the options for the ls command to see how to show file sizes.)
+- hint, it involves 'ls'. See if you can do it using a relative and absolute path
+- another hint: There is an option to make it easy to read the file size. Use one of the two methods to find it
+A: 
+    RELATIVE PATH: Use ls -l (displays whole file names), ls -lh (or ls -l -h to get the data value in Kb, Mb, Gb, etc.)
+    ABSOLUTE PATH: use /home/users/alk1078/gen711-811/shell_data/untrimmed_fastq | ls -lh
+                or ls -lh /home/users/alk1078/gen711-811/shell_data/untrimmed_fastq/
+
+    Actual output:  
+        drwxr-xr-x. 2 alk1078 domain users  44 Feb 13 16:46 backup
+        -rw-r--r--. 1 alk1078 domain users 15K Feb 13 16:01 headerlines.txt
+        -rw-r--r--. 1 alk1078 domain users 47K Feb 13 16:01 SRR097977.fastq
+        -rw-r--r--. 1 alk1078 domain users 43 Feb 13 16:01 SRR098026.fastq
+"REVIEW: cp (original file to copy) (directory)/(file name that differs from original)"
+
+##FILE PERMISSIONS NOTES
+    ###Using File Permissions
+        "drwxrwxrwx" --> d = file type, first 3 = user, second 3 = group, third 3 = other       
+        Permissions for self, group, and other 
+        Permission classes, "RWX" (Read, Write, Execute- from L to R)
+                
+        chmod (change mode) manipulates user/group privileges
+            "-rw-r--r-- --> User can read/write (but cannot execute, new txt file does not get it to save viral invasion), group can read but not write, other can only read CURRENTLY"
+            "USING COMMAND FOR USER: chmod -(r,w,x) (file name) --> this removes a privilage, will stop associated privilges; use + to add privilages"
+        
+                "REVIEW 2: rm -Rf (directory), recursive, force --> Nuke everything in the specific directory"
+
+
+            ### EXERCISE 5.1
+Starting in the shell_data/untrimmed_fastq directory, do the following:
+
+Make sure that you have deleted your backup directory and all files it contains.
+Create a backup of each of your FASTQ files using cp. (Note: You’ll need to do this individually for each of the two FASTQ files. We haven’t learned yet how to do this with a wildcard.)
+Use a wildcard to move all of your backup files to a new backup directory.
+Paste the code you used to do each step between the \'\'\' below:
+
+
+```
+rm -Rf backup
+mkdir backup
+cp SRR098026.fastq backup/
+cp SRR097977.fastq backup/ (mv *.fastq backup/" will move all .fastq files into the backup (desired) directory- I just forgot to do this)
+ls backup/
+mv SRR098026.fastq SRR098026-backup.fastq
+mv SRR097977.fastq SRR097977-backup.fastq (RENAMED FILES, original files were copied directly from old directory, mv (file) (new name of file)
+
+```
+####
+
+'### File Permissions Help
+The first part of the output for the `-l` flag gives you information about the file's current permissions. There are ten slots in the
+permissions list. The first character in this list is related to file type, not permissions, so we'll ignore it for now. The next three
+characters relate to the permissions that the file owner has, the next three relate to the permissions for group members, and the final
+three characters specify what other users outside of your group can do with the file. We're going to concentrate on the three positions
+that deal with your permissions (as the file owner).
+
+![](fig/rwx_figure.svg){alt='Permissions breakdown'}
+
+Here the three positions that relate to the file owner are `rw-`. The `r` means that you have permission to read the file, the `w`
+indicates that you have permission to write to (i.e. make changes to) the file, and the third position is a `-`, indicating that you
+don't have permission to carry out the ability encoded by that space (this is the space where `x` or executable ability is stored, we'll
+talk more about this later).
+'
+### EXERCISE 5.2
+Change the permissions on all of your backup files to be write-protected.
+
+```
+cd backup
+chmod -w SRR097977.fastq
+chmod -w SRR098026.fastq
+ls -l
+
+```
+"chmod ug+rwx SRR097977.fastq allows read write and execution permissions for group and user"  
+
+
+How do you know they are write protected?
+A: After running ls -l the user permission- originally "rw-"- has changed to "r--"- meaning the "write" privilage has been removed
+
+      
+
+### EXERCISE 5.3: CONDA ENVIRONMENTS AND PROGRAMS
+
+bash commands vs other commands
+    bash = linux (shell commands, all systems understand this language to a degree)
+    going to use python and r (other coding systems, similar yet some differences in syntax)
+
+
+After loading a conda environment, where is the program 'fastqc' stored?
+
+"conda activate genomics activates --> genomics environment connection --> know it worked by seeing (genomics)"
+"conda deactivate --> kicks out out of conda"
+"RUNNING FASTQC: fastqc *.fastq* --> sequences all fastq files --> makes .zip and .html files --> MUST DOWNLOAD HTML FILES TO DESKTOP"
+
+```
+which fastqc (displays absolute path --> /home/share/anaconda/envs/genomics/bin/fastqc)
+
+```
+
+### Explore the fastqc output. Which samples failed at least one of FastQC’s quality tests? What test(s) did those samples fail?
+
+"mv *.zip fastqc_untrimmed_reads/
+mv *.html fastqc_untrimmed_reads/"
+"unzip"
+:::::::::::::::::::::::::::::::::::::::: keypoints
+- Use `which` for commands/programs to see where they are installed
+- You can view file permissions using `ls -l` and change permissions using `chmod`.
+- The `history` command and the up arrow on your keyboard can be used to repeat recently used commands.
+- Explain what a conda environment is, and how to activate and deactivate it
+
+::::::::::::::::::::::::::::::::::::::::::::::::::
