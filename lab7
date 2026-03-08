@@ -230,6 +230,7 @@ Trimmomatic has a variety of options to trim your reads. If we run the following
 
 ```bash
 $ trimmomatic
+(need to run conda activate trimmomatic-0.39)
 ```
 
 Which will give you the following output:
@@ -368,9 +369,66 @@ TrimmomaticPE: Completed successfully
 Use the output from your Trimmomatic command to answer the
 following questions.
 
-1) What percent of reads did we discard from our sample?
-2) What percent of reads did we keep both pairs?
+downloaded files
+ran: trimmomatic PE SRR2589044_1.fastq.gz SRR2589044_2.fastq.gz \
+                SRR2589044_1.trim.fastq.gz SRR2589044_1un.trim.fastq.gz \
+                SRR2589044_2.trim.fastq.gz SRR2589044_2un.trim.fastq.gz \
+                SLIDINGWINDOW:4:20 MINLEN:25 ILLUMINACLIP:NexteraPE-PE.fa:2:40:15
+        Both Surviving = Q2
+        Dropped = Q1
 
+1) What percent of reads did we discard from our sample?
+    From first set: 0.23%
+2) What percent of reads did we keep both pairs?
+    From first set: 79.96%
+
+
+WITH THE FOR LOOP:
+
+### INPUT: 
+(trimmomatic-0.39) [alk1078@ron lab7_zip]$ for infile in *_1.fastq.gz
+do
+  base=$(basename ${infile} _1.fastq.gz)
+  trimmomatic PE ${infile} ${base}_2.fastq.gz \
+               ${base}_1.trim.fastq.gz ${base}_1un.trim.fastq.gz \
+               ${base}_2.trim.fastq.gz ${base}_2un.trim.fastq.gz \
+               SLIDINGWINDOW:4:20 MINLEN:25 ILLUMINACLIP:NexteraPE-PE.fa:2:40:15 
+done
+
+### OUTPUT:
+TrimmomaticPE: Started with arguments:
+ SRR2584863_1.fastq.gz SRR2584863_2.fastq.gz SRR2584863_1.trim.fastq.gz SRR2584863_1un.trim.fastq.gz SRR2584863_2.trim.fastq.gz SRR2584863_2un.trim.fastq.gz SLIDINGWINDOW:4:20 MINLEN:25 ILLUMINACLIP:NexteraPE-PE.fa:2:40:15
+Using PrefixPair: 'AGATGTGTATAAGAGACAG' and 'AGATGTGTATAAGAGACAG'
+Using Long Clipping Sequence: 'GTCTCGTGGGCTCGGAGATGTGTATAAGAGACAG'
+Using Long Clipping Sequence: 'TCGTCGGCAGCGTCAGATGTGTATAAGAGACAG'
+Using Long Clipping Sequence: 'CTGTCTCTTATACACATCTCCGAGCCCACGAGAC'
+Using Long Clipping Sequence: 'CTGTCTCTTATACACATCTGACGCTGCCGACGA'
+ILLUMINACLIP: Using 1 prefix pairs, 4 forward/reverse sequences, 0 forward only sequences, 0 reverse only sequences
+Quality encoding detected as phred33
+Input Read Pairs: 1553259 Both Surviving: 1271924 (81.89%) Forward Only Surviving: 273488 (17.61%) Reverse Only Surviving: 3861 (0.25%) Dropped: 3986 (0.26%)
+TrimmomaticPE: Completed successfully
+TrimmomaticPE: Started with arguments:
+ SRR2584866_1.fastq.gz SRR2584866_2.fastq.gz SRR2584866_1.trim.fastq.gz SRR2584866_1un.trim.fastq.gz SRR2584866_2.trim.fastq.gz SRR2584866_2un.trim.fastq.gz SLIDINGWINDOW:4:20 MINLEN:25 ILLUMINACLIP:NexteraPE-PE.fa:2:40:15
+Using PrefixPair: 'AGATGTGTATAAGAGACAG' and 'AGATGTGTATAAGAGACAG'
+Using Long Clipping Sequence: 'GTCTCGTGGGCTCGGAGATGTGTATAAGAGACAG'
+Using Long Clipping Sequence: 'TCGTCGGCAGCGTCAGATGTGTATAAGAGACAG'
+Using Long Clipping Sequence: 'CTGTCTCTTATACACATCTCCGAGCCCACGAGAC'
+Using Long Clipping Sequence: 'CTGTCTCTTATACACATCTGACGCTGCCGACGA'
+ILLUMINACLIP: Using 1 prefix pairs, 4 forward/reverse sequences, 0 forward only sequences, 0 reverse only sequences
+Quality encoding detected as phred33
+Input Read Pairs: 2768398 Both Surviving: 2053874 (74.19%) Forward Only Surviving: 578725 (20.90%) Reverse Only Surviving: 131060 (4.73%) Dropped: 4739 (0.17%)
+TrimmomaticPE: Completed successfully
+TrimmomaticPE: Started with arguments:
+ SRR2589044_1.fastq.gz SRR2589044_2.fastq.gz SRR2589044_1.trim.fastq.gz SRR2589044_1un.trim.fastq.gz SRR2589044_2.trim.fastq.gz SRR2589044_2un.trim.fastq.gz SLIDINGWINDOW:4:20 MINLEN:25 ILLUMINACLIP:NexteraPE-PE.fa:2:40:15
+Using PrefixPair: 'AGATGTGTATAAGAGACAG' and 'AGATGTGTATAAGAGACAG'
+Using Long Clipping Sequence: 'GTCTCGTGGGCTCGGAGATGTGTATAAGAGACAG'
+Using Long Clipping Sequence: 'TCGTCGGCAGCGTCAGATGTGTATAAGAGACAG'
+Using Long Clipping Sequence: 'CTGTCTCTTATACACATCTCCGAGCCCACGAGAC'
+Using Long Clipping Sequence: 'CTGTCTCTTATACACATCTGACGCTGCCGACGA'
+ILLUMINACLIP: Using 1 prefix pairs, 4 forward/reverse sequences, 0 forward only sequences, 0 reverse only sequences
+Quality encoding detected as phred33
+Input Read Pairs: 1107090 Both Surviving: 885220 (79.96%) Forward Only Surviving: 216472 (19.55%) Reverse Only Surviving: 2850 (0.26%) Dropped: 2548 (0.23%)
+TrimmomaticPE: Completed successfully
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::
 
@@ -454,7 +512,8 @@ We trimmed our fastq files with Nextera adapters,
 but there are other adapters that are commonly used.
 What other adapter files came with Trimmomatic?
 
-
+   Code Run: ls /home/share/anaconda/envs/trimmomatic-0.39/share/trimmomatic/adapters
+      Answer: NexteraPE-PE.fa  TruSeq2-PE.fa  TruSeq2-SE.fa  TruSeq3-PE-2.fa  TruSeq3-PE.fa  TruSeq3-SE.fa
 
 ## Solution Output
 
