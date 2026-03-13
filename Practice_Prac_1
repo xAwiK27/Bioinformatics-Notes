@@ -88,8 +88,8 @@ For todays practice practical, use SRR fastqs instead
 
 ### 11. What is the 100th line in the Sample1.fasta file? (hint: the 'head' command is one way to do this- but you may need to specify an option) (2 points)
 
-        head -n  100  SRR097977.fasta 
-        head -n  100  SRR098026.fasta 
+        head -n  100  SRR097977.fasta (GCGGAGCTGGTGATTGGCGAACTGCTGCTGCTATTT)
+        head -n  100  SRR098026.fasta (NNNNNNNNNNNNNTNNGNNNNNNNNNNNNNNNNNN)
 
 ### 12. Run md5sum on Sample1.fasta (md5sum Sample1.fasta). Then, run it again, but redirect the output to a new file called 'my_md5sums.txt'.  (2 points)
 
